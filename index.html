@@ -1,0 +1,114 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GreyWorld 100 with Categories</title>
+<style>body{background:#000;color:#fff;margin:0;font-family:Arial}header{background:linear-gradient(90deg,red,orange);padding:15px;text-align:center;position:sticky;top:0;z-index:10}input{width:90%;max-width:500px;padding:11px;border-radius:20px;border:none;margin-top:8px;outline:none}nav{display:flex;gap:6px;overflow-x:auto;padding:10px;background:#111}nav button{background:#222;color:#ccc;border:1px solid #333;padding:7px 14px;border-radius:20px;font-size:11px;white-space:nowrap}nav button.active{background:red;color:#fff}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:8px}.card{background:#151515;border-radius:10px;overflow:hidden;border:1px solid #222}.card img{width:100%;height:100px;object-fit:cover;display:block}.info{padding:6px}.card h3{margin:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card p{margin:2px 0 0;color:#888;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#count{text-align:center;padding:6px;background:#111;font-size:11px;color:#777}b{color:red}</style></head><body>
+<header><h1>GREYWORLD FINAL 100</h1><p>With Pictures + Categories</p><input id="q" placeholder="Search Alec Benjamin, Asake, Burna..." oninput="filterSearch()"></header>
+<nav id="nav"></nav>
+<div id="count"><b id="total">0</b> Songs</div>
+<div class="grid" id="grid"></div>
+<script>
+var songs=[
+"Lonely At The Top - Asake","Amapiano - Asake","Terminator - Asake","Sungba - Asake","Joha - Asake","Organise - Asake","2:30 - Asake","Basquiat - Asake","MMS - Asake ft Wizkid","Lungu Boy - Asake",
+"Active - Asake","Remember - Asake","Mr Money - Asake","Great Guy - Asake","Yoga - Asake",
+"Ye - Burna Boy","Last Last - Burna Boy","Gbona - Burna Boy","On The Low - Burna Boy","African Giant - Burna Boy",
+"City Boys - Burna Boy","For My Hand - Burna Boy","Kilometre - Burna Boy","Anybody - Burna Boy","Big 7 - Burna Boy",
+"Sungba Remix - Burna Boy","Higher - Burna Boy","Common Person - Burna Boy","Dangote - Burna Boy","Giza - Burna Boy",
+"Essence - Wizkid","Calm Down - Rema","Unavailable - Davido","Rush - Ayra Starr","Higher - Tems",
+"Peru - Fireboy","Buga - Kizz Daniel","Ask About Me - Mohbad","Kwaku Traveller - Black Sherif","Amapiano - Seyi Vibez",
+"Fall - Davido","Ojuelegba - Wizkid","Dumebi - Rema","Soweto - Victony","Sability - Ayra Starr",
+"African Queen - 2Baba","Oliver Twist - Dbanj","Do Me - P-Square","Lady - Fela Kuti","Eni Duro - Olamide",
+"Zazoo Zeh - Portable","Limpopo - Kcee","Godwin - Korede Bello","Dorobucci - MAVIN","Woju - Kizz Daniel",
+"Carolina - Awilo","Kukere - Iyanya","Gongo Aso - 9ice","Holla At Your Boy - Wizkid","Dami Duro - Davido",
+"Thriller - Michael Jackson","Billie Jean - Michael Jackson","One Love - Bob Marley","No Woman No Cry - Bob Marley","Bohemian Rhapsody - Queen",
+"Hotel California - Eagles","Imagine - John Lennon","Hey Jude - Beatles","I Will Always Love You - Whitney Houston","My Heart Will Go On - Celine Dion",
+"Shape Of You - Ed Sheeran","Hello - Adele","Umbrella - Rihanna","Blinding Lights - Weeknd","Rolling In The Deep - Adele",
+"Let Me Down Slowly - Alec Benjamin","Water Fountain - Alec Benjamin","The Way I Loved You - Alec Benjamin","If We Have Each Other - Alec Benjamin","Jesus In LA - Alec Benjamin",
+"Oh My God - Alec Benjamin","Flowers - Miley Cyrus","Anti-Hero - Taylor Swift","Cruel Summer - Taylor Swift","As It Was - Harry Styles",
+"Watermelon Sugar - Harry Styles","Bad Guy - Billie Eilish","Levitating - Dua Lipa","About Damn Time - Lizzo","Unholy - Sam Smith",
+"Starboy - Weeknd","One Dance - Drake","God Did - DJ Khaled","Under The Influence - Chris Brown","Running Up That Hill - Kate Bush",
+"Break My Soul - Beyonce","Diamonds - Rihanna","CUFF IT - Beyonce","Work - Rihanna","Cruel Summer 2 - Taylor Swift"
+];
+
+var cats=["All","Asake","Burna","Afro","Legends","Intl Old","International"];
+var nav=document.getElementById('nav');
+
+for(var j=0;j<cats.length;j++){
+  (function(catName){
+    var btn=document.createElement('button');
+    btn.textContent=catName;
+    if(catName=="All")btn.className="active";
+    btn.onclick=function(){
+      var allBtns=document.querySelectorAll('nav button');
+      for(var b=0;b<allBtns.length;b++)allBtns[b].classList.remove('active');
+      btn.classList.add('active');
+      if(catName=="All"){render(songs);}
+      else if(catName=="Asake"){filterBy("Asake");}
+      else if(catName=="Burna"){filterBy("Burna");}
+      else if(catName=="Afro"){filterByAfro();}
+      else if(catName=="Legends"){filterByLegends();}
+      else if(catName=="Intl Old"){filterByIntlOld();}
+      else if(catName=="International"){filterByInternational();}
+    };
+    nav.appendChild(btn);
+  })(cats[j]);
+}
+
+function filterBy(keyword){
+  var f=[];
+  for(var i=0;i<songs.length;i++){if(songs[i].indexOf(keyword)!=-1)f.push(songs[i]);}
+  render(f);
+}
+
+function filterByAfro(){
+  var keys=["Wizkid","Rema","Davido","Ayra","Tems","Fireboy","Kizz Daniel","Mohbad","Black Sherif","Seyi Vibez"];
+  var f=[];
+  for(var i=0;i<songs.length;i++){for(var k=0;k<keys.length;k++){if(songs[i].indexOf(keys[k])!=-1){f.push(songs[i]);break;}}}
+  render(f);
+}
+
+function filterByLegends(){
+  var keys=["2Baba","Dbanj","P-Square","Fela","Olamide","Portable","Kcee","Korede","MAVIN","Awilo","Iyanya","9ice"];
+  var f=[];
+  for(var i=0;i<songs.length;i++){for(var k=0;k<keys.length;k++){if(songs[i].indexOf(keys[k])!=-1){f.push(songs[i]);break;}}}
+  render(f);
+}
+
+function filterByIntlOld(){
+  var keys=["Michael Jackson","Bob Marley","Queen","Eagles","John Lennon","Beatles","Whitney Houston","Celine Dion"];
+  var f=[];
+  for(var i=0;i<songs.length;i++){for(var k=0;k<keys.length;k++){if(songs[i].indexOf(keys[k])!=-1){f.push(songs[i]);break;}}}
+  render(f);
+}
+
+function filterByInternational(){
+  var keys=["Alec Benjamin","Miley","Taylor Swift","Harry Styles","Billie Eilish","Dua Lipa","Lizzo","Sam Smith","Weeknd","Drake","DJ Khaled","Chris Brown","Kate Bush","Beyonce","Rihanna"];
+  var f=[];
+  for(var i=0;i<songs.length;i++){for(var k=0;k<keys.length;k++){if(songs[i].indexOf(keys[k])!=-1){f.push(songs[i]);break;}}}
+  render(f);
+}
+
+function render(list){
+  var g=document.getElementById('grid');
+  g.innerHTML='';
+  for(var i=0;i<list.length;i++){
+    var song=list[i];
+    var parts=song.split(' - ');
+    var title=parts[0];
+    var artist=parts[1]||'';
+    var div=document.createElement('div');
+    div.className='card';
+    div.innerHTML='<img src="https://picsum.photos/seed/grey'+i+'/400/300" loading="lazy"><div class="info"><h3>'+title+'</h3><p>'+artist+'</p></div>';
+    (function(s){div.onclick=function(){window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(s), '_blank');};})(song);
+    g.appendChild(div);
+  }
+  document.getElementById('total').innerHTML=list.length;
+}
+
+function filterSearch(){
+  var q=document.getElementById('q').value.toLowerCase();
+  var f=[];
+  for(var i=0;i<songs.length;i++){if(songs[i].toLowerCase().indexOf(q)!=-1)f.push(songs[i]);}
+  render(f);
+}
+
+render(songs);
+</script></body></html>
